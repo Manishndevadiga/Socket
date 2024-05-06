@@ -3,9 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Chat Application</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing: border-box;
+        }
+
+        .maincontainer{
+            display:grid;
+            border:3px solid black;
+            height:100vh;
+            grid-template-rows: 1fr  5fr;
+        }
+
+        .child{
+            /* border:1px solid black; */
+        }
+
+        .child1{
+           display:flex;
+           justify-content: space-around;
+           align-items: center;
+           background-color: aliceblue;
+        }
+
+        input{
+            width:70vw;
+            height:8vh;
+            font-size: 1.1em;
+            border-radius: 1em;
+            padding-left: 1em;
+            border:0.5px solid blue;
+        }
+
+        #btn{
+            width:20vw;
+            height:7vh;
+            border-radius: 1em;
+            font-size: 1em;
+            border:0.5px solid blue;
+            background-color: rgb(107, 178, 240);
+            color:rgb(255, 255, 255);
+        }
+
+        .rcvdDiv{
+            width: 70vw;
+            height: 5vh;
+            font-size: 1.1em;
+            font-family: "Roboto", sans-serif;
+            border-radius: 1em;
+            padding-left: 1em;
+            padding-top: 0.4em;
+            background-color: rgb(74, 27, 194);
+            color:white;
+            margin-top: 0.5em;
+            margin-left: 0.5em;
+        }
+
+    </style>
 </head>
 <body>
-    
+    <div class="maincontainer">
+<div class="child child1">
+    <div  class="subchild1">
+        <label><input type="text" name="message" id="message" placeholder="Enter Message"></label>
+    </div>
+
+    <div  class="subchild2">
+        <button id="btn">Send</button>   
+    </div>
+</div>
+
+<div  class="child child2">
+    <div id="rcvdmessage">
+
+    </div>
+</div>
+
+    </div>
 </body>
+
+
+
+
+<script src="/socket.io/socket.io.js"></script> 
+
+<script>
+const socket = io();
+</script>
+
+
+
+<script>
+    const inputBox = document.getElementById("message");
+    const btn = document.getElementById("btn");
+      
+    btn.addEventListener("click",()=>{
+        console.log(inputBox.value);
+        socket.emit("user-message",inputBox.value);
+        inputBox.value="";
+    })
+ </script>
+
+
+<script>
+
+    const rcvdMessages = document.getElementById("rcvdmessage");
+    
+    socket.on("client-message",(data)=>{
+        console.log(data);
+        let div=document.createElement("div");
+        div.classList.add("rcvdDiv");
+        div.innerHTML=`<p>${data}</p>`;
+        rcvdMessages.append(div);
+    });
+    </script>
+
 </html>
