@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat History</title>
+    <style>
+
+         *{
+            margin:0;
+            padding:0;
+            box-sizing: border-box;
+        }
+
+        .chatContainer{
+            height:100vh;
+            /* background-color: rgb(183, 215, 242); */
+        }
+
+        .senddDiv{
+            width: 70vw;
+            height: 5vh;
+            font-size: 1.1em;
+            font-family: "Roboto", sans-serif;
+            border-radius: 1em;
+            padding-left: 1em;
+            padding-top: 0.4em;
+            background-color: rgb(74, 27, 194);
+            color:white;
+            margin-top: 0.5em;
+            margin-left: 0.5em;
+            box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chatContainer" id="chatContainer">
+
+    </div>
+    
+</body>
+<script>
+       fetch('/getChats')
+       .then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to fetch file');
+    }
+    return response.text();
+  })
+  .then(data => {
+    const lines = data.split('\n');
+    console.log(lines);
+    const chatContainer = document.getElementById("chatContainer");
+    lines.forEach(line => {
+      console.log(line);
+        let div=document.createElement("div");
+        div.classList.add("senddDiv");
+        const cleanedLine = line.replace(/^"|"$/g, '');
+        div.innerHTML=`<p>${cleanedLine}</p>`;
+        chatContainer.append(div);
+    });
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+
+
+</script>
+</html>
